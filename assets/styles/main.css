@@ -1,0 +1,43 @@
+body {
+  background-color: #f8f9fa;
+  
+}
+
+
+.container {
+  margin-top: 50px;
+}
+.error-message {
+  color: red;
+}
+.success-message {
+  color: green;
+}
+.pet-list {
+  margin-top: 20px;
+}
+.logo-big {
+  width: 300px;
+  height: 300px;
+}
+
+.logo {
+  width: 75px;
+  height: 75px;
+}
+.mybutton {
+  min-width: 100px;
+}
+.icon {
+  width: 25px;
+  height: 25px;
+}
+.my-link {
+  outline: none;
+  border: none;
+  background-color: transparent;
+}
+.my-link:hover {
+  cursor: pointer;
+  transform: scale(1.1);
+}

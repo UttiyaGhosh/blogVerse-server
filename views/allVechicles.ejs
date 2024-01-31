@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>All Vehicle Maintenance Logs</title>
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link href="/styles/main.css" rel="stylesheet" />
+    <style>
+      body {
+          background-color: #ffffff;
+          margin: 10px;
+          padding: 50px;
+          background-image: url('/images/Unknown.png');
+          background-size: 25% 35%;
+          background-position: top center;
+          background-repeat: no-repeat;
+          font-family: Arial, sans-serif;
+      }
+  </style>
+  </head>
+  <body>
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="/dashboard"
+          ><img src="/images/logo.png" class="logo"
+        /></a>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="btn btn-primary" aria-current="page" href="/cars/addVehicle"
+                >Add Maintenance Log</a
+              >
+            </li>
+          </ul>
+        </div>
+        <div class="logout-link float-left me-3">
+          <a href="/auth/logout" class="btn btn-danger">Logout</a>
+        </div>
+      </div>
+    </nav>
+    <!-- NAVBAR -->
+
+    <!-- VIEW ALL VEHICLE MAINTENANCE LOGS STARTS HERE  -->
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-md-10">
+          <h1 class="text-center mb-4">All Vehicle Maintenance Logs</h1>
+          <div class="maintenance-log-list">
+            <table class="table table-bordered">
+              <thead>
+                <tr class="text-center">
+                  <th>Log ID</th>
+                  <th>Vehicle ID</th>
+                  <th>Date</th>
+                  <th>Maintenance Type</th>
+                  <th>Cost</th>
+                  <th>Mechanic Name</th>
+                  <th>Service Location</th>
+                  <th>Parts Replaced</th>
+                  <th>Notes</th>
+                  <th>Next Service Date</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <% cars.forEach(function(car) { %>
+                <tr class="text-center">
+                  <td><%= car.logID %></td>
+                  <td><%= car.vehicleID %></td>
+                  <td><%= car.date.toDateString() %></td>
+                  <td><%= car.maintenanceType %></td>
+                  <td><%= car.cost %></td>
+                  <td><%= car.mechanicName %></td>
+                  <td><%= car.serviceLocation %></td>
+                  <td><%= car.partsReplaced %></td>
+                  <td><%= car.notes %></td>
+                  <td><%= car.nextServiceDate.toDateString() %></td>
+                  <td
+                    class="d-flex justify-content-center align-items-center gap-4"
+                  >
+                    <form action="/cars/<%= car._id %>" method="post">
+                      <input
+                        type="hidden"
+                        name="logId"
+                        value="<%= car._id %>"
+                      />
+
+                      <button type="submit" class="my-link">
+                        <img src="/images/edit.png" class="icon" />
+                      </button>
+                    </form>
+                    <form action="/cars/delete/<%= car._id %>" method="post">
+                      <button type="submit" class="my-link">
+                        <img src="/images/delete.png" class="icon" />
+                      </button>
+                    </form>
+                  </td>
+                </tr>
+                <% });%>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
