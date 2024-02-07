@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 // Define the Vehicle Maintenance Log schema
 const blogSchema = new mongoose.Schema({
     title: String,
-    body: Number,
+    body: String,
     createdBy: String,
     createdDate: Date,
     comments: {
