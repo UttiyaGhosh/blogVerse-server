@@ -1,26 +1,47 @@
 const mongoose = require('mongoose');
 
-// Define the Vehicle Maintenance Log schema
 const blogSchema = new mongoose.Schema({
-    title: String,
-    body: String,
-    createdBy: String, // User Object
-    createdDate: Date,
-    comments: {
-        commentBoby:String,
-        createdBy:String, // User Object
-        createdDate:Date
+    title: {
+        type: String,
+        required: true
     },
-    category: { 
-        type: String, 
-        enum: ['Programming', 'Frameworks', 'Tools', 'Software Engineering', 'Interview Preparation'] 
+    body: {
+        type: String,
+        required: true
+    },
+    createdBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Users',
+        required: true
+    },
+    createdDate: {
+        type: Date,
+        default: Date.now
+    },
+    comments: [{
+        commentBoby:{
+            type: String,
+            required: true
+        },
+        createdBy: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User',
+            required: true
+        },
+        createdDate: {
+            type: Date,
+            default: Date.now
+        },
+    }],
+    category: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Categories',
+        required: true
     },
     tags: [String],
     deletedDate: Date
  });
 
-// Create the Vehicle Maintenance Log model
 const Blog = mongoose.model('blogs', blogSchema);
 
-// Export the Vehicle Maintenance Log model
 module.exports = Blog;
