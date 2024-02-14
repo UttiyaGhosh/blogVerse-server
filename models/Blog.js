@@ -4,11 +4,11 @@ const mongoose = require('mongoose');
 const blogSchema = new mongoose.Schema({
     title: String,
     body: String,
-    createdBy: String,
+    createdBy: String, // User Object
     createdDate: Date,
     comments: {
         commentBoby:String,
-        createdBy:String,
+        createdBy:String, // User Object
         createdDate:Date
     },
     category: { 

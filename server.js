@@ -4,13 +4,14 @@ const cookieEncrypter = require("cookie-encrypter");
 const ejs = require("ejs");
 const cors = require("cors");
 const path = require("path");
-const port = 3000;
 const app = express();
 const authRoutes = require("./routes/authRoutes");
 const { connect } = require("./utils/database");
-const vehicleMaintenanceRoutes = require("./routes/vehicleMaintenanceRoutes");
+const blogRoutes = require("./routes/blogRoutes");
 const validateCookie = require("./middlewares/validateCookie");
 require("dotenv").config();
+
+const port = process.env.PORT;
 
 app.use(express.json());
 app.use(cors());
@@ -28,8 +29,9 @@ app.use("/auth", authRoutes);
 app.use("/dashboard", validateCookie, (req, res) => {
   res.render("dashboard");
 });
-app.use("/cars", validateCookie, vehicleMaintenanceRoutes);
+app.use("/blogs", validateCookie, blogRoutes);
 let client;
+
 connect()
   .then((connectedClient) => {
     client = connectedClient;

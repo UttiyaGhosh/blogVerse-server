@@ -2,7 +2,8 @@ const express = require("express");
 const router = express.Router();
 
 const Blog = require("../models/Blog");
-
+//server side validation
+//deploy in a server
 const viewAllBlogs = async (req, res) => {
   console.log("*************")
   try {
