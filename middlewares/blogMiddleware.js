@@ -1,0 +1,54 @@
+const User = require("../models/User");
+const Category = require("../models/Category");
+
+async function convertUserNameToObjectId(req, res, next) {
+    console.log('Entered convertUserNameToObjectId')
+    try {
+        const { userName } = req.body;
+        const user = await User.findOne({ name: userName });
+        if (!user) {
+            return res.status(400).json({ error: 'User not found' });
+        }
+        req.body.createdBy = user._id;
+        next();
+    } catch (error) {
+        if(error instanceof Error){
+            console.error(error.message);
+            res.status(400).json({ error: error.message });
+          }else{
+            console.error(error);
+            res.status(500).json({ error: "Internal Server Error" });
+          }
+    }
+}
+
+async function convertCategoryNameToObjectId(req, res, next) {
+    console.log('Entered convertCategoryNameToObjectId')
+    try {
+        const { category } = req.body;
+        const categoryDB = await Category.findOne({ name: category });
+        if (!category) {
+            return res.status(400).json({ error: 'Category not found' });
+        }
+        req.body.category = categoryDB._id;
+        next();
+    } catch (error) {
+        if(error instanceof Error){
+            console.error(error.message);
+            res.status(400).json({ error: error.message });
+          }else{
+            console.error(error);
+            res.status(500).json({ error: "Internal Server Error" });
+          }
+    }
+}
+
+async function validateBlogData(req, res, next) {
+    const { title, body, createdBy, category } = req.body;
+    if (!title || !body || !createdBy || !category) {
+        return res.status(400).json({ error: 'Missing required fields' });
+    }
+    next();
+}
+
+module.exports = { convertUserNameToObjectId, convertCategoryNameToObjectId, validateBlogData };

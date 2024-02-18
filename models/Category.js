@@ -3,14 +3,15 @@ const mongoose = require('mongoose');
 const categorySchema = new mongoose.Schema({
     name: {
         type: String,
+        unique: true,
         required: true
     },
-    tags: {
-        type: [String],
-        required: true
-    }
+    createdDate: {
+        type: Date,
+        default: Date.now
+    },
  });
 
-const Blog = mongoose.model('categories', categorySchema);
+const Category = mongoose.model('categories', categorySchema);
 
-module.exports = Blog;
+module.exports = Category;

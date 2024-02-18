@@ -1,35 +1,31 @@
 const express = require("express");
 const cookieParser = require("cookie-parser");
 const cookieEncrypter = require("cookie-encrypter");
-const ejs = require("ejs");
 const cors = require("cors");
 const path = require("path");
 const app = express();
 const authRoutes = require("./routes/authRoutes");
 const { connect } = require("./utils/database");
 const blogRoutes = require("./routes/blogRoutes");
+const categoryRoutes = require("./routes/categoryRoutes");
 const validateCookie = require("./middlewares/validateCookie");
 require("dotenv").config();
 
 const port = process.env.PORT;
 
-app.use(express.json());
+
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, "assets")));
+app.use(express.json());
 
 app.use(cookieParser("sudarshvenkat"));
 app.use(cookieEncrypter("thisismysecretkeytoencryptcookie"));
-app.set("view engine", "ejs");
 
-app.get("/", (req, res) => {
-  res.render("homepage");
-});
+
 app.use("/auth", authRoutes);
-app.use("/dashboard", validateCookie, (req, res) => {
-  res.render("dashboard");
-});
 app.use("/blogs", validateCookie, blogRoutes);
+app.use("/categories", validateCookie, categoryRoutes);
+
 let client;
 
 connect()
