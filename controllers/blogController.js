@@ -1,14 +1,33 @@
-const express = require("express");
-const router = express.Router();
-
+const User = require("../models/User");
 const Blog = require("../models/Blog");
-//server side validation
-//deploy in a server
-const viewAllBlogs = async (req, res) => {
-  try {
-    const allBlogs = await Blog.find();
+const { format } = require('date-fns');
+const cheerio = require('cheerio');
 
-    res.status(200).json(allBlogs );
+const viewBlogs = async (req, res) => {
+  const { createdBy,searchQuery } = req.query;
+  
+  let dbQuery = {}
+  if(createdBy)
+    dbQuery = {createdBy:createdBy}
+  if(searchQuery)
+    dbQuery = {
+      $or: [
+        { title: { $regex: searchQuery, $options: 'i' } },
+        { 'category.name': { $regex: searchQuery, $options: 'i' } }
+      ]
+    }
+
+  try {
+    const blogs = await Blog.find(dbQuery)
+    console.log(blogs)
+    const blogsResponse = await Promise.all(blogs.map(async (blog) => ({
+      _id: blog._id,
+      title: blog.title,
+      userName: await convertUserIdToUserName(blog.createdBy),
+      createdDate: format(blog.createdDate, 'MMM d, yyyy'),
+      summary:convertBodyToSummary(blog.body,240) +' ...'
+    })));
+    res.status(200).json(blogsResponse);
   } catch (error) {
     if(error instanceof Error){
       console.error(error.message);
@@ -61,4 +80,25 @@ const deleteBlog = async (req, res) => {
   }
 };
 
-module.exports = { viewAllBlogs, addNewBlog, updateBlog, deleteBlog };
+async function convertUserIdToUserName(userId) {
+      console.log('Entered convertUserIdToUserName with:',userId)
+      const user = await User.findOne({ _id: userId });
+      console.log(`User Name for ${userId} is ${user.username}`)
+      return user.username
+}
+
+function convertBodyToSummary (body,length) {
+  const $ = cheerio.load(body);
+  const extractedText = [];
+
+  $('p').each((index, element) => {
+      const paragraphText = $(element).text().trim();
+      const first200Characters = paragraphText.slice(0, length);
+      extractedText.push(first200Characters);
+  });
+
+  const combinedText = extractedText.join(' ');
+  return combinedText
+};
+
+module.exports = { viewBlogs, addNewBlog, updateBlog, deleteBlog };

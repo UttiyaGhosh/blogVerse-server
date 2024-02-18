@@ -38,7 +38,6 @@ const blogSchema = new mongoose.Schema({
         ref: 'Categories',
         required: true
     },
-    tags: [String],
     deletedDate: Date
  });
 

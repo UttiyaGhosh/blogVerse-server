@@ -1,15 +1,16 @@
 const User = require("../models/User");
 const Category = require("../models/Category");
 
-async function convertUserNameToObjectId(req, res, next) {
-    console.log('Entered convertUserNameToObjectId')
+async function convertUserNameToUserId(req, res, next) {
     try {
-        const { userName } = req.body;
-        const user = await User.findOne({ name: userName });
+        console.log('Entered convertUserNameToUserId with request:',req.body)
+        const { createdBy } = req.body;        
+        const user = await User.findOne({ username: createdBy });
         if (!user) {
             return res.status(400).json({ error: 'User not found' });
         }
         req.body.createdBy = user._id;
+        console.log(`User Id for ${createdBy} is ${req.body.createdBy}`)
         next();
     } catch (error) {
         if(error instanceof Error){
@@ -22,8 +23,8 @@ async function convertUserNameToObjectId(req, res, next) {
     }
 }
 
-async function convertCategoryNameToObjectId(req, res, next) {
-    console.log('Entered convertCategoryNameToObjectId')
+async function convertCategoryNameToCategoryId(req, res, next) {
+    console.log('Entered convertCategoryNameToCategoryId')
     try {
         const { category } = req.body;
         const categoryDB = await Category.findOne({ name: category });
@@ -31,6 +32,7 @@ async function convertCategoryNameToObjectId(req, res, next) {
             return res.status(400).json({ error: 'Category not found' });
         }
         req.body.category = categoryDB._id;
+        console.log(`Category Id for ${category} is ${req.body.category}`)
         next();
     } catch (error) {
         if(error instanceof Error){
@@ -51,4 +53,4 @@ async function validateBlogData(req, res, next) {
     next();
 }
 
-module.exports = { convertUserNameToObjectId, convertCategoryNameToObjectId, validateBlogData };
+module.exports = { convertUserNameToUserId, convertCategoryNameToCategoryId, validateBlogData };

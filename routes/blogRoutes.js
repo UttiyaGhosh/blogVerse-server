@@ -1,23 +1,23 @@
 const express = require("express");
 const router = express.Router();
 const {
-  viewAllBlogs,
+  viewBlogs,
   addNewBlog,
   updateBlog,
   deleteBlog,
 } = require("../controllers/blogController");
 const {
-  convertUserNameToObjectId, 
-  convertCategoryNameToObjectId, 
+  convertUserNameToUserId, 
+  convertCategoryNameToCategoryId, 
   validateBlogData 
 } = require("../middlewares/blogMiddleware")
 
 
 // Route to get all blogs
-router.get("/", viewAllBlogs);
+router.get("/", viewBlogs);
 
 // Route to add a new blog
-router.post("/add",convertUserNameToObjectId, convertCategoryNameToObjectId, validateBlogData ,  addNewBlog);
+router.post("/add",convertUserNameToUserId, convertCategoryNameToCategoryId, validateBlogData ,  addNewBlog);
 
 // Route to update a blog
 router.post("/update/:id", updateBlog);
