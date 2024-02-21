@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Registration</title>
+    <!-- Include Tailwind CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 flex items-center justify-center h-screen">
+    <div class="bg-white p-8 rounded shadow-md w-96">
+        <h2 class="text-2xl font-bold mb-4">User Registration</h2>
+        <form action="/register" method="POST">
+            <div class="mb-4">
+                <label for="username" class="block text-gray-700">Username:</label>
+                <input type="text" id="username" name="username" class="form-input mt-1 block w-full" required>
+            </div>
+            
+            <div class="mb-6">
+                <label for="password" class="block text-gray-700">Password:</label>
+                <input type="password" id="password" name="password" class="form-input mt-1 block w-full" required>
+            </div>
+            
+            <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Register</button>
+        </form>
+    </div>
+</body>
+</html>
