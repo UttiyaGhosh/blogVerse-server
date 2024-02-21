@@ -6,14 +6,16 @@ const options = {
   socketTimeoutMS: 30000, // Increase this value as needed
 };
 
+const uri = `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@${process.env.MONGO_HOST}/${process.env.DB_NAME}`;
+
 async function connect() {
   try {
-    mongoose.set("strictQuery", false);
-    await mongoose.connect(process.env.MONGO_URL, options);
-    console.log("Connected to MongoDB");
-  } catch (error) {
-    console.error("DB connection failed:", error);
-  }
+    await mongoose.connect(uri);
+    return mongoose;
+ } catch (e) {
+  console.error(e);
+    throw e;
+ }
 }
 
 module.exports = { connect };

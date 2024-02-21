@@ -5,22 +5,22 @@ const validateCookie = async (req, res, next) => {
   try {
     // Check if the 'user' cookie exists
 
-    const encryptedCookie = req.signedCookies.user;
-    if (!encryptedCookie) {
-      return res.status(401).json({ error: "Unauthorized - Missing cookie" });
-    }
+    // const encryptedCookie = req.signedCookies.user;
+    // if (!encryptedCookie) {
+    //   return res.status(401).json({ error: "Unauthorized - Missing cookie" });
+    // }
 
     // Decrypt the cookie value
-    const decryptedUsername = encryptedCookie;
+    // const decryptedUsername = encryptedCookie;
 
     // Check if the user exists in the database
-    const user = await User.findOne({ username: decryptedUsername });
+    // const user = await User.findOne({ username: decryptedUsername });
 
-    if (!user) {
-      return res.status(401).json({ error: "Unauthorized - Invalid user" });
-    }
+    // if (!user) {
+    //   return res.status(401).json({ error: "Unauthorized - Invalid user" });
+    // }
 
-    req.user = user;
+    // req.user = user;
     next();
   } catch (error) {
     console.error(error);
