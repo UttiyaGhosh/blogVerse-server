@@ -22,7 +22,7 @@ app.use(cookieParser("sudarshvenkat"));
 app.use(cookieEncrypter("thisismysecretkeytoencryptcookie"));
 
 
-app.use("/auth", authRoutes);
+app.use("/api", authRoutes);
 app.use("/blogs", validateCookie, blogRoutes);
 app.use("/categories", validateCookie, categoryRoutes);
 
@@ -37,8 +37,7 @@ connect()
   .catch((err) => {
     console.error("Failed to connect to MongoDB", err);
 
-    process.exit(1); // Exit the application if the database connection fails
-  });
+app.use('/api', authRoutes);
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
