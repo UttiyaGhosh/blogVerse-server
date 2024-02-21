@@ -37,8 +37,7 @@ connect()
   .catch((err) => {
     console.error("Failed to connect to MongoDB", err);
 
-    process.exit(1); // Exit the application if the database connection fails
-  });
+app.use('/api', authRoutes);
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
