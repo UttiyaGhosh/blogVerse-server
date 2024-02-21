@@ -1,21 +1,28 @@
 const User = require("../models/User");
 const Blog = require("../models/Blog");
+const Category = require("../models/Category");
 const { format } = require('date-fns');
 const cheerio = require('cheerio');
 
 const viewBlogs = async (req, res) => {
-  const { createdBy,searchQuery } = req.query;
+  const { createdBy,searchQuery,id } = req.query;
   
-  let dbQuery = {}
-  if(createdBy)
-    dbQuery = {createdBy:createdBy}
-  if(searchQuery)
-    dbQuery = {
-      $or: [
-        { title: { $regex: searchQuery, $options: 'i' } },
-        { 'category.name': { $regex: searchQuery, $options: 'i' } }
-      ]
-    }
+  let dbQuery = { deletedDate: null };
+
+  if (createdBy) {
+    dbQuery.createdBy = createdBy;
+  }
+
+  if (searchQuery) {
+    dbQuery.$or = [
+      { title: { $regex: searchQuery, $options: 'i' } },
+      { 'category.name': { $regex: searchQuery, $options: 'i' } }
+    ];
+  }
+
+  if (id) {
+    dbQuery._id = id;
+  }
 
   try {
     const blogs = await Blog.find(dbQuery)
@@ -24,6 +31,7 @@ const viewBlogs = async (req, res) => {
       _id: blog._id,
       title: blog.title,
       userName: await convertUserIdToUserName(blog.createdBy),
+      category: await convertCategoryIdToCategoryName(blog.category),
       createdDate: format(blog.createdDate, 'MMM d, yyyy'),
       summary:convertBodyToSummary(blog.body,240) +' ...'
     })));
@@ -71,7 +79,11 @@ const updateBlog = async (req, res) => {
 };
 const deleteBlog = async (req, res) => {
   try {
-    const deletedBlog = await BlogMaintenance.findByIdAndDelete(req.params.id);
+    const deletedBlog = await Blog.findByIdAndUpdate(
+      req.params.id,
+      { deletedDate: new Date() },
+      { new: true }
+    );
     res.status(200).json(deletedBlog);
   } catch (error) {
     console.error(error);
@@ -87,10 +99,16 @@ async function convertUserIdToUserName(userId) {
       return user.username
 }
 
+async function convertCategoryIdToCategoryName(categoryId) {
+  console.log('Entered convertCategoryIdToCategoryName with:',categoryId)
+  const category = await Category.findOne({ _id: categoryId });
+  console.log(`User Name for ${categoryId} is ${category.name}`)
+  return category.name
+}
+
 function convertBodyToSummary (body,length) {
   const $ = cheerio.load(body);
   const extractedText = [];
-
   $('p').each((index, element) => {
       const paragraphText = $(element).text().trim();
       const first200Characters = paragraphText.slice(0, length);
