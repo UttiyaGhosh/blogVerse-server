@@ -1,10 +1,24 @@
 const Category = require("../models/Category");
 
-const viewAllCategories = async (req, res) => {
-  
+const viewCategories = async (req, res) => {
+  const { name,createNew } = req.query;
+
+  let dbQuery = {};
+  if (name) {
+    dbQuery.name = name;
+  }
+
   try {
-    const allCategories = await Category.find();
-    res.status(200).json(allCategories.map(category=>category.name) );
+    const allCategories = await Category.find(dbQuery);
+    
+    if(allCategories.length == 0 && createNew){
+      const newCategory = new Category({name:name});
+      const savedCategory = await newCategory.save();
+      res.status(200).json([savedCategory]);
+    }else{
+      res.status(200).json(allCategories.map(category=>category.name));
+    }
+
   } catch (error) {
     if(error instanceof Error){
       console.error(error.message);
@@ -65,4 +79,4 @@ const deleteCategory = async (req, res) => {
   }
 };
 
-module.exports = { viewAllCategories, addNewCategory, updateCategory, deleteCategory };
+module.exports = { viewCategories, addNewCategory, updateCategory, deleteCategory };
