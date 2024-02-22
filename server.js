@@ -2,7 +2,6 @@ const express = require("express");
 const cookieParser = require("cookie-parser");
 const cookieEncrypter = require("cookie-encrypter");
 const cors = require("cors");
-const path = require("path");
 const app = express();
 const authRoutes = require("./routes/authRoutes");
 const { connect } = require("./utils/database");
@@ -36,9 +35,12 @@ connect()
   })
   .catch((err) => {
     console.error("Failed to connect to MongoDB", err);
+  })
 
-app.use('/api', authRoutes);
-
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+app.listen(port, (error) => {
+  if (error) {
+    console.error(`Error starting server: ${error.message}`);
+  } else {
+    console.log(`Server is running on port ${port}`);
+  }
 });
