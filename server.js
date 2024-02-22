@@ -22,8 +22,8 @@ app.use(cookieEncrypter("thisismysecretkeytoencryptcookie"));
 
 
 app.use("/api", authRoutes);
-app.use("/blogs", validateCookie, blogRoutes);
-app.use("/categories", validateCookie, categoryRoutes);
+app.use("/api/blogs", validateCookie, blogRoutes);
+app.use("/api/categories", validateCookie, categoryRoutes);
 
 let client;
 
