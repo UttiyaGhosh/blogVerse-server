@@ -88,7 +88,7 @@ const addNewBlog = async (req, res) => {
     const newBlog = new Blog(req.body);
     const savedBlog = await newBlog.save();
 
-    res.status(200).json(savedBlog);
+    res.status(200).json({id:savedBlog._id});
   } catch (error) {
     if(error instanceof Error){
       console.error(error.message);
