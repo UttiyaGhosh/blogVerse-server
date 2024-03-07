@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const {
   viewBlogs,
+  viewBlog,
   addNewBlog,
   updateBlog,
   deleteBlog,
@@ -15,13 +16,16 @@ const {
 // Route to get all blogs
 router.get("/", viewBlogs);
 
+// Route to get a single blog
+router.get("/:id", viewBlog);
+
 // Route to add a new blog
-router.post("/add",convertUserNameToUserId, validateBlogData ,  addNewBlog);
+router.post("/",convertUserNameToUserId, validateBlogData ,  addNewBlog);
 
 // Route to update a blog
-router.post("/update/:id", updateBlog);
+router.put("/:id", updateBlog);
 
 // Route to delete a pet by ID
-router.post("/delete/:id", deleteBlog);
+router.delete("/:id", deleteBlog);
 
 module.exports = router;

@@ -4,6 +4,42 @@ const Category = require("../models/Category");
 const { format } = require('date-fns');
 const cheerio = require('cheerio');
 
+const viewBlog = async (req, res) => {
+  const { id } = req.params;
+  
+  let dbQuery = { 
+    _id:id,
+    deletedDate: null 
+  };
+
+  try {
+    const blogs = await Blog.find(dbQuery)
+    if(blogs.length==1)
+    {
+      const blog = blogs[0]
+      const blogsResponse = {
+        _id: blog._id,
+        title: blog.title,
+        userName: await convertUserIdToUserName(blog.createdBy),
+        category: await convertCategoryIdToCategoryName(blog.category),
+        createdDate: format(blog.createdDate, 'MMM d, yyyy'),
+        body:blog.body
+      }
+      res.status(200).json(blogsResponse);
+    }else{
+      res.status(404).json({ error: "Blog Not Found" });
+    }
+  } catch (error) {
+    if(error instanceof Error){
+      console.error(error.message);
+      res.status(400).json({ error: error.message });
+    }else{
+      console.error(error);
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+  }
+};
+
 const viewBlogs = async (req, res) => {
   const { createdBy,searchQuery,id } = req.query;
   
@@ -66,9 +102,11 @@ const addNewBlog = async (req, res) => {
 
 const updateBlog = async (req, res) => {
   try {
-    const updatedBlog = await Blog.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-    });
+    const updatedBlog = await Blog.findByIdAndUpdate(
+      req.params.id,
+      { body: req.body.body },
+      { new: true }
+  );
 
     res.status(200).json(updatedBlog);
   } catch (error) {
@@ -78,6 +116,7 @@ const updateBlog = async (req, res) => {
   }
 };
 const deleteBlog = async (req, res) => {
+  console.log("A")
   try {
     const deletedBlog = await Blog.findByIdAndUpdate(
       req.params.id,
@@ -119,4 +158,4 @@ function convertBodyToSummary (body,length) {
   return combinedText
 };
 
-module.exports = { viewBlogs, addNewBlog, updateBlog, deleteBlog };
+module.exports = { viewBlogs, viewBlog, addNewBlog, updateBlog, deleteBlog };

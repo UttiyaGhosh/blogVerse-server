@@ -4,8 +4,6 @@ const options = {
   serverSelectionTimeoutMS: 60000,
   connectTimeoutMS: 30000,
   socketTimeoutMS: 30000,
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
   maxPoolSize: 10
 };
 
