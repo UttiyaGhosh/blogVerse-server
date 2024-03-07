@@ -41,8 +41,8 @@ const viewBlog = async (req, res) => {
 };
 
 const viewBlogs = async (req, res) => {
-  const { createdBy,searchQuery,id } = req.query;
-  
+  const { createdBy,searchQuery,category,id } = req.query;
+
   let dbQuery = { deletedDate: null };
 
   if (createdBy) {
@@ -51,8 +51,7 @@ const viewBlogs = async (req, res) => {
 
   if (searchQuery) {
     dbQuery.$or = [
-      { title: { $regex: searchQuery, $options: 'i' } },
-      { 'category.name': { $regex: searchQuery, $options: 'i' } }
+      { title: { $regex: searchQuery, $options: 'i' } }
     ];
   }
 
@@ -60,17 +59,24 @@ const viewBlogs = async (req, res) => {
     dbQuery._id = id;
   }
 
+  if (category) {
+    const categoryDB = await Category.findOne({ name: category });
+    if (categoryDB) {
+      dbQuery.category = categoryDB._id;
+    }
+  }
+
   try {
     const blogs = await Blog.find(dbQuery)
-    console.log(blogs)
-    const blogsResponse = await Promise.all(blogs.map(async (blog) => ({
+    const blogsResponse = await Promise.all(blogs.map(async (blog) => {
+      return {
       _id: blog._id,
       title: blog.title,
       userName: await convertUserIdToUserName(blog.createdBy),
       category: await convertCategoryIdToCategoryName(blog.category),
       createdDate: format(blog.createdDate, 'MMM d, yyyy'),
       summary:convertBodyToSummary(blog.body,240) +' ...'
-    })));
+    }}));
     res.status(200).json(blogsResponse);
   } catch (error) {
     if(error instanceof Error){
@@ -116,7 +122,6 @@ const updateBlog = async (req, res) => {
   }
 };
 const deleteBlog = async (req, res) => {
-  console.log("A")
   try {
     const deletedBlog = await Blog.findByIdAndUpdate(
       req.params.id,
@@ -132,16 +137,12 @@ const deleteBlog = async (req, res) => {
 };
 
 async function convertUserIdToUserName(userId) {
-      console.log('Entered convertUserIdToUserName with:',userId)
       const user = await User.findOne({ _id: userId });
-      console.log(`User Name for ${userId} is ${user.username}`)
       return user.username
 }
 
 async function convertCategoryIdToCategoryName(categoryId) {
-  console.log('Entered convertCategoryIdToCategoryName with:',categoryId)
   const category = await Category.findOne({ _id: categoryId });
-  console.log(`User Name for ${categoryId} is ${category.name}`)
   return category.name
 }
 

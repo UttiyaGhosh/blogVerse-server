@@ -79,54 +79,26 @@ Response:
 ]
 ```
 
-#### Search blogs
+#### Filter blogs
 
-Request: `curl --location 'https://blog-verse-server.vercel.app/api/blogs/?searchQuery=python'`
+Request: `curl --location 'https://blog-verse-server.vercel.app/api/blogs/?createdBy=65cceadebbed8dce9c357bb6&searchQuery=Idea&category=tools'`
 
 Response:
 ```
 [
     {
-        "_id": "65e8e0d13b94523006426602",
-        "title": "Introduction to Python Programming",
+        "_id": "65e8e1813b9452300642663f",
+        "title": "IntelliJ IDEA",
         "userName": "User1",
-        "category": "programming",
+        "category": "tools",
         "createdDate": "Mar 6, 2024",
-        "summary": "Python is a versatile and beginner-friendly programming language known for its simplicity and readability. Originally developed by Guido van Rossum in the late 1980s, Python has since become one of the most popular languages in the world, w ..."
+        "summary": "IntelliJ IDEA, developed by JetBrains, is a powerful integrated development environment (IDE) primarily designed for Java development but also supports various programming languages like Kotlin, Groovy, Scala, and more. It offers a comprehe  ..."
     }
 ]
 ```
 
-#### View blogs by user
 
-Request: `curl --location 'https://blog-verse-server.vercel.app/api/blogs/?createdBy=65cceadebbed8dce9c357bb6'`
-
-Response: 
-
-```
-[
-    {
-        "_id": "65d1768def8d99161902a511",
-        "title": "ChatGPT",
-        "userName": "User1",
-        "category": "programming",
-        "createdDate": "Feb 18, 2024",
-        "summary": "ChatGPT is an AI-powered language model developed by OpenAI, designed to understand and generate human-like text based on the input it receives. It belongs to the family of Generative Pre-trained Transformers (GPT), which are large-scale ne ..."
-    },
-    {
-        "_id": "65e8e0d13b94523006426602",
-        "title": "Introduction to Python Programming",
-        "userName": "User1",
-        "category": "programming",
-        "createdDate": "Mar 6, 2024",
-        "summary": "Python is a versatile and beginner-friendly programming language known for its simplicity and readability. Originally developed by Guido van Rossum in the late 1980s, Python has since become one of the most popular languages in the world, w ..."
-    },
-    
-    ... (truncated)
-]
-```
-
-#### View single blog
+#### Get single blog
 
 Request: `curl --location 'https://blog-verse-server.vercel.app/api/blogs/65d1768def8d99161902a511'`
 
@@ -187,4 +159,46 @@ Response:
     "__v": 0,
     "deletedDate": "2024-03-07T02:43:34.057Z"
 }
+```
+
+### Category Management
+
+#### Create Category
+
+Request:
+
+```
+curl --location 'https://blog-verse-server.vercel.app/api/categories' \
+--header 'Content-Type: application/json' \
+--data '{
+    "name": "design principles"
+}'
+```
+
+Response:
+```
+{
+    "name": "design principles",
+    "_id": "65e9fa701c91e22919bc3ec9",
+    "createdDate": "2024-03-07T17:33:36.018Z",
+    "__v": 0
+}
+```
+
+#### View Categories
+
+Request:
+
+```
+curl --location 'https://blog-verse-server.vercel.app/api/categories'
+```
+
+Response:
+```
+[
+    "programming",
+    "tools",
+    "framework",
+    "design principles"
+]
 ```
