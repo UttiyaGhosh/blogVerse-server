@@ -8,7 +8,8 @@ const {
   deleteBlog,
 } = require("../controllers/blogController");
 const {
-  convertUserNameToUserId, 
+  convertUserNameToUserId,
+  convertCategoryNameToCategoryId,
   validateBlogData 
 } = require("../middlewares/blogMiddleware")
 
@@ -20,7 +21,7 @@ router.get("/", viewBlogs);
 router.get("/:id", viewBlog);
 
 // Route to add a new blog
-router.post("/",convertUserNameToUserId, validateBlogData ,  addNewBlog);
+router.post("/",convertUserNameToUserId, convertCategoryNameToCategoryId, validateBlogData ,  addNewBlog);
 
 // Route to update a blog
 router.put("/:id", updateBlog);
